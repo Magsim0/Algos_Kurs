@@ -97,19 +97,20 @@ class ThirdSandpile(Sandpile):
         o = p % self.max_grains
         self.grid[elem_x, elem_y] = o
 
-        self.grid[elem_x, elem_y+1] += b
-        self.grid[elem_x + 1, elem_y + 1] += b
-        self.grid[elem_x + 2, elem_y] += b
-        self.grid[elem_x + 2, elem_y - 1] += b
-        self.grid[elem_x + 1, elem_y - 2] += b
-        self.grid[elem_x, elem_y - 2] += b
-        self.grid[elem_x - 1, elem_y] += b
-        self.grid[elem_x - 1, elem_y - 1] += b
+        if np.all(self.grid[elem_x - 1, elem_y - 1]) <1:
+            self.grid[elem_x + 1, elem_y + 1] += b
+        self.grid[elem_x + 1, elem_y - 1] += b
+        if np.all(self.grid[elem_x + 1, elem_y - 1])<1:
+            self.grid[elem_x + 1, elem_y - 1] += b
+        self.grid[elem_x - 1, elem_y ] += b
+        self.grid[elem_x + 1, elem_y ] += b
+        self.grid[elem_x , elem_y - 1] += b
+        self.grid[elem_x , elem_y - 1] += b
 
 
-            # Обработка граничных условий (если это необходимо)
         self.grid[0] = self.grid[-1] = 0
         self.grid[:, 0] = self.grid[:, -1] = 0
+
 
 
 def start_simulation(menu, userdata):
@@ -153,13 +154,16 @@ def create_menu():
 
     rows = 150
     cols = 150
-    sands = 2 ** 20
+    sands = 2 ** 15
 
     menu.add.button("Square grid", start_simulation, menu, ['Square grid', rows, cols, sands,4])
     menu.add.button("Rhomb grid", start_simulation2, menu, ['Rhomb grid', rows, cols, sands, 4])
-    menu.add.button("Hexagonal grid", start_simulation3, menu, ['Hexagonal grid', rows, cols, sands, 8])
+    menu.add.button("Inclined plane", start_simulation3, menu, ['Inclined plane', rows, cols, sands, 6])
     return menu
 
 
 menu = create_menu()
 menu.mainloop(pygame.display.set_mode((400, 300)))
+
+
+
